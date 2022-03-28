@@ -14,16 +14,13 @@ jobs:
     name: Run acceptance tests
     runs-on: ubuntu-latest
     steps:
-      - name: Get gitHub context
-        run: echo "${{ toJson(github) }}"
-
       - name: Slack notification on failure
         uses: ravsamhq/notify-slack-action@v1
         if: always()
         with:
           status: ${{ job.status }}
           notification_title: 'Mizu {workflow} has {status_message}'
-          message_format: '{emoji} *{workflow}* {status_message} during <{run_url}|run>, after commit: <{commit_url}|{commit_sha} ${{ github.event.head_commit.message }}> by "${{ toJson(github.event.head_commit.committer.username) }}"'
+          message_format: '{emoji} *{workflow}* {status_message} during <{run_url}|run>, after commit: <{commit_url}|{commit_sha} "${{ github.event.head_commit.message }}"> by #${{ toJson(github.event.head_commit.committer.name) }}'
           footer: 'Linked Repo <{repo_url}|{repo}>'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
